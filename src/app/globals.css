@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-app-bg: #020202;
+  --color-surface: #0d0d0d;
+  --color-surface-2: #161616;
+  --color-border: #1a1a1a;
+  --color-border-light: #262626;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #999999;
+  --color-text-muted: #666666;
+  --color-accent: #2dd4bf;
+  --color-accent-hover: #5eead4;
+  --color-accent-dim: rgba(45, 212, 191, 0.1);
+  --color-accent-glow: rgba(45, 212, 191, 0.15);
+
+  /* Backwards compat aliases for studio page */
+  --color-panel-bg: #161616;
+  --color-panel-border: #1a1a1a;
+  --color-accent-teal: #2dd4bf;
+  --color-accent-teal-hover: #5eead4;
+  --color-btn-bg: #1a1a1a;
+  --color-btn-hover: #262626;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    background-color: var(--color-app-bg);
+    color: var(--color-text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  ::selection {
+    background: rgba(45, 212, 191, 0.3);
+    color: #fff;
+  }
+}
