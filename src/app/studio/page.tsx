@@ -21,6 +21,8 @@ const AGENT_TIMELINE: AgentStep[] = [
   { t: 30, agent: 'All',       msg: 'Your project is ready.' },
 ];
 
+
+
 // ─── Agent colour map ────────────────────────────────────────────
 const AGENT_COLORS: Record<string, string> = {
   Builder:   'text-teal-400',
@@ -79,6 +81,19 @@ function StudioContent() {
   const [copied, setCopied] = useState(false);
   const logRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const [wokwiUrl, setWokwiUrl] = useState(
+    'https://wokwi.com/projects/new/arduino-uno'
+  );
+  const [iframeLoading, setIframeLoading] = useState(true);
+  
+  const wokwiProjects: Record<string,string> = {
+    'Smart Street Light': 'https://wokwi.com/projects/new/arduino-uno',
+    'Fire and Gas Alarm System': 'https://wokwi.com/projects/new/arduino-uno',
+    'Smart Irrigation System': 'https://wokwi.com/projects/new/arduino-uno',
+    'Traffic Light Controller': 'https://wokwi.com/projects/new/arduino-uno',
+    'Weather Station': 'https://wokwi.com/projects/new/arduino-uno',
+  };
 
   const selectedProject: Project | undefined = PROJECTS.find(p => p.id === selectedId);
 
@@ -200,6 +215,8 @@ function StudioContent() {
                   if (p) setPrompt(p.samplePrompt);
                   setIsGenerated(false);
                   setIsSimulating(false);
+                  const selectedValue = p ? p.title : e.target.value;
+                  setWokwiUrl(wokwiProjects[selectedValue] ?? 'https://wokwi.com/projects/new/arduino-uno');
                 }}
                 className="w-full appearance-none bg-panel-bg border border-panel-border text-text-primary rounded-lg py-2.5 pl-3 pr-8 text-sm focus:outline-none focus:border-accent-teal transition-all cursor-pointer disabled:opacity-50"
               >
@@ -238,30 +255,13 @@ function StudioContent() {
             </div>
           )}
 
-          {/* Prompt area */}
-          <div className="flex-1 p-5 flex flex-col gap-3 overflow-y-auto">
-            <div className="flex justify-between items-center">
-              <label htmlFor="prompt" className="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">Project Requirements</label>
-              {selectedProject && (
-                <button onClick={() => setPrompt(selectedProject.samplePrompt)} disabled={isGenerating}
-                  className="text-[10px] text-accent-teal hover:underline disabled:opacity-40 font-medium">
-                  Use sample
-                </button>
-              )}
-            </div>
-            <textarea
-              id="prompt"
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-              disabled={isGenerating}
-              rows={8}
-              placeholder="Describe what you want to build..."
-              className="flex-1 bg-[#0a0a0c] border border-panel-border rounded-xl p-4 text-sm text-text-primary resize-none focus:outline-none focus:ring-1 focus:ring-accent-teal focus:border-accent-teal transition-all placeholder:text-zinc-700 disabled:opacity-50 font-mono leading-relaxed"
-            />
 
+
+          {/* Prompt area */}
+          <div className="flex-1 flex flex-col gap-3 overflow-y-auto px-5 pb-5 pt-2">
             {/* Learning goals */}
             {selectedProject && (
-              <div className="bg-panel-bg/40 border border-panel-border rounded-xl p-3">
+              <div className="bg-panel-bg/40 border border-panel-border rounded-xl p-3 shrink-0 mb-4">
                 <p className="text-[10px] uppercase font-bold tracking-wider text-text-secondary mb-2">Learning Goals</p>
                 <ul className="space-y-1">
                   {selectedProject.learningGoals.map((g, i) => (
@@ -272,28 +272,70 @@ function StudioContent() {
                 </ul>
               </div>
             )}
-          </div>
-
-          {/* Generate button */}
-          <div className="shrink-0 p-5 border-t border-panel-border bg-gradient-to-t from-black/60 to-transparent">
-            {error && <p className="text-red-400 text-xs mb-3 leading-relaxed">{error}</p>}
-            <button
-              onClick={handleGenerate}
-              disabled={!selectedProject || prompt.trim() === '' || isGenerating}
-              className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl font-bold text-sm bg-accent-teal text-black hover:bg-teal-400 transition-all shadow-[0_0_20px_rgba(20,184,166,0.2)] hover:shadow-[0_0_30px_rgba(20,184,166,0.4)] disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none"
-            >
-              {isGenerating ? (
-                <>
-                  <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-                  Orchestrating agents…
-                </>
-              ) : (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                  Generate Architecture
-                </>
-              )}
-            </button>
+            
+            {/* Prompt area */}
+            <div className="mt-auto shrink-0 flex flex-col gap-3">
+              <p style={{
+                fontFamily:'JetBrains Mono, monospace', fontSize:'10px',
+                color:'#aaffdc', letterSpacing:'0.3em',
+                textTransform:'uppercase', marginBottom:'8px'
+              }}>
+                [ DESCRIBE YOUR PROJECT ]
+              </p>
+              <textarea
+                value={prompt}
+                maxLength={500}
+                onChange={(e) => {
+                  setPrompt(e.target.value);
+                  const counter = document.getElementById('char-counter');
+                  if (counter) counter.textContent = `${e.target.value.length} / 500`;
+                }}
+                placeholder="Describe your robotics project... e.g. line-following robot with Arduino Uno"
+                style={{
+                  width:'100%', minHeight:'120px', padding:'14px',
+                  background:'#131313', color:'#ffffff', resize:'none',
+                  border:'1px solid rgba(170,255,220,0.25)', borderRadius:'0px',
+                  fontFamily:'JetBrains Mono, monospace', fontSize:'13px',
+                  outline:'none', boxSizing:'border-box'
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#00fdc1';
+                  e.target.style.boxShadow = 'inset 0 0 0 1px rgba(0,253,193,0.15)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(170,255,220,0.25)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
+              <div style={{display:'flex', justifyContent:'space-between', 
+                alignItems:'center', marginTop:'8px'}}>
+                <span id="char-counter" style={{
+                  fontFamily:'JetBrains Mono, monospace',
+                  fontSize:'10px', color:'#777575'
+                }}>{prompt.length} / 500</span>
+                <button
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                  style={{
+                    background:'#00fdc1', color:'#004734', fontWeight:'700',
+                    fontSize:'11px', letterSpacing:'0.15em', textTransform:'uppercase',
+                    padding:'10px 20px', border:'none', borderRadius:'0px', cursor:'pointer',
+                    opacity: isGenerating ? 0.5 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isGenerating) {
+                      (e.target as HTMLButtonElement).style.boxShadow = 
+                        '0 0 15px rgba(0,237,180,0.35)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLButtonElement).style.boxShadow = 'none';
+                  }}
+                >
+                  {isGenerating ? 'GENERATING...' : 'GENERATE →'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -553,7 +595,15 @@ function StudioContent() {
                   </div>
                 </div>
                 <pre className="p-6 text-[13px] font-mono leading-relaxed text-zinc-300 overflow-x-auto bg-black/60" style={{ scrollbarWidth: 'thin' }}>
-                  <code>{builderData.code || '// No code generated.'}</code>
+                  <code dangerouslySetInnerHTML={{
+                    __html: builderData.code ? builderData.code
+                      .replace(/(\/\/.+)/g, '<span style="color:#777575">$1</span>')
+                      .replace(/\b(int|float|void|const|String|long)\b/g, '<span style="color:#00edb4">$1</span>')
+                      .replace(/\b(setup|loop|pinMode|digitalWrite|analogRead|delay|Serial\.begin|Serial\.print|Serial\.println)\b/g, '<span style="color:#59fac3">$1</span>')
+                      .replace(/(#include\s+<[^>]+>)/g, '<span style="color:#7fdede">$1</span>')
+                      .replace(/\bHIGH\b|\bLOW\b|\bOUTPUT\b|\bINPUT\b/g, '<span style="color:#aaffdc">$&</span>')
+                      : '// No code generated.'
+                  }} />
                 </pre>
               </div>
 

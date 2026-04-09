@@ -16,20 +16,20 @@ export default function Navbar() {
           </Link>
 
           <nav className="hidden items-center gap-8 font-['Space_Grotesk'] text-[10px] font-bold uppercase tracking-[0.18em] md:flex">
-            <Link href="/studio" className="border-b border-[#00FFC2] pb-1 text-[#00FFC2]">
+            <Link href="/studio" className={(pathname as string) === '/studio' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1]" : "text-[#777] transition-colors hover:text-[#00fdc1]"}>
               Studio
             </Link>
-            <a href="#agents" className="text-[#777] transition-colors hover:text-[#00FFC2]">
-              Agents
-            </a>
-            <a href="#projects" className="text-[#777] transition-colors hover:text-[#00FFC2]">
-              Projects
-            </a>
-            <a href="#schools" className="text-[#777] transition-colors hover:text-[#00FFC2]">
+            <Link href="/schools" className={(pathname as string) === '/schools' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1]" : "text-[#777] transition-colors hover:text-[#00fdc1]"}>
               Schools
-            </a>
-            <Link href="/docs" className="text-[#777] transition-colors hover:text-[#00FFC2]">
+            </Link>
+            <Link href="/pricing" className={(pathname as string) === '/pricing' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1]" : "text-[#777] transition-colors hover:text-[#00fdc1]"}>
+              Pricing
+            </Link>
+            <Link href="/docs" className={(pathname as string) === '/docs' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1]" : "text-[#777] transition-colors hover:text-[#00fdc1]"}>
               Docs
+            </Link>
+            <Link href="/about" className={(pathname as string) === '/about' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1]" : "text-[#777] transition-colors hover:text-[#00fdc1]"}>
+              About
             </Link>
           </nav>
 
@@ -48,21 +48,27 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-border bg-app-bg/80 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-[11px] font-extrabold tracking-tighter text-black">
-            IN
-          </div>
-          <span className="text-[15px] font-semibold tracking-tight text-text-primary">Innobotix</span>
+
+          <span className="text-[15px] font-semibold tracking-tight text-text-primary">
+            Inno<span className="text-accent-teal">Botix</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          <Link href="/studio" className="text-[14px] text-text-secondary transition-colors hover:text-text-primary">
+          <Link href="/studio" className={pathname === '/studio' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1] text-[14px]" : "text-[14px] text-text-secondary transition-colors hover:text-[#00fdc1]"}>
             Studio
           </Link>
-          <Link href="/school" className="text-[14px] text-text-secondary transition-colors hover:text-text-primary">
+          <Link href="/schools" className={pathname === '/schools' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1] text-[14px]" : "text-[14px] text-text-secondary transition-colors hover:text-[#00fdc1]"}>
             Schools
           </Link>
-          <Link href="/docs" className="text-[14px] text-text-secondary transition-colors hover:text-text-primary">
+          <Link href="/pricing" className={pathname === '/pricing' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1] text-[14px]" : "text-[14px] text-text-secondary transition-colors hover:text-[#00fdc1]"}>
+            Pricing
+          </Link>
+          <Link href="/docs" className={pathname === '/docs' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1] text-[14px]" : "text-[14px] text-text-secondary transition-colors hover:text-[#00fdc1]"}>
             Docs
+          </Link>
+          <Link href="/about" className={pathname === '/about' ? "border-b-2 border-[#00fdc1] pb-1 text-[#00fdc1] text-[14px]" : "text-[14px] text-text-secondary transition-colors hover:text-[#00fdc1]"}>
+            About
           </Link>
         </nav>
 

@@ -1,100 +1,195 @@
+'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 
-export default function Docs() {
+const sections = [
+  {
+    id: 'overview',
+    label: '01 — Overview',
+    title: 'What is Innobotix?',
+    content: `Innobotix is an AI-powered robotics engineering studio built for Indian students and schools. It is designed around three core principles: accessibility, precision, and curriculum alignment.
+
+The platform converts a plain-language project description into a complete engineering package — Bill of Materials (BOM), circuit wiring diagram, pinout mapping, and production-ready Arduino code — in under 30 seconds.
+
+Innobotix is not a chatbot. It is a multi-agent system where three specialized AI agents — The Builder, The Mentor, and The Simulator — work in parallel to handle different layers of the engineering workflow. This architecture is what separates Innobotix from every other EdTech tool in the Indian market.
+
+Aligned to NEP 2020 competency frameworks and the CBSE curriculum, Innobotix is built to be adopted directly by schools, not just individual students.`
+  },
+  {
+    id: 'quickstart',
+    label: '02 — Quick Start',
+    title: 'Getting Started in 60 Seconds',
+    content: `Step 1 — Select your project from the dropdown in the Studio workspace. Projects are organized by curriculum level: CBSE Common, Intermediate, and Advanced Showcase.
+
+Step 2 — Describe your requirements in the prompt bar on the left. Be specific — mention your board (Arduino Uno, ESP32, Raspberry Pi Pico), your sensors, and what you want the project to do. Example: "Build a smart street light that turns on automatically when ambient light drops below 400 lux, using an LDR sensor and a relay module."
+
+Step 3 — Click Generate Architecture. The Builder Agent will produce your complete BOM, wiring diagram, and boilerplate code within 30 seconds.
+
+Step 4 — Use the Wokwi Simulation panel to test your circuit logic in a virtual environment before touching any physical hardware. This eliminates the most common failure point for student projects — incorrect wiring.
+
+Step 5 — Ask the Mentor Agent to explain any concept you don't understand. It identifies short-circuit risks, explains voltage divider logic, and walks through your code line by line in plain English.`
+  },
+  {
+    id: 'agents',
+    label: '03 — AI Agents',
+    title: 'The Three-Agent Architecture',
+    content: `THE BUILDER AGENT handles schematic synthesis. Given a hardware specification and project brief, it generates a complete Bill of Materials with component costs in INR, a wiring diagram in Wokwi-compatible format, GPIO pinout mapping for your board, and optimized Arduino/MicroPython boilerplate code with inline comments.
+
+THE MENTOR AGENT handles real-time debugging and conceptual explanation. It identifies common wiring mistakes (missing pull-up resistors, incorrect voltage levels, floating pins), explains circuit theory in plain English tailored to the student's level, and provides step-by-step assembly guidance. It understands the CBSE and NEP 2020 learning frameworks and aligns its explanations to those competency levels.
+
+THE SIMULATOR AGENT handles Wokwi integration. It pre-configures the virtual simulation environment based on the architecture the Builder produced, allowing students to test their logic without physical components. It also validates code correctness and flags runtime issues before deployment.
+
+All three agents run in parallel, not sequentially, which is what enables the sub-30-second response time.`
+  },
+  {
+    id: 'curriculum',
+    label: '04 — Curriculum',
+    title: 'NEP 2020 & CBSE Alignment',
+    content: `Innobotix is the only AI engineering studio in India built with NEP 2020 competency mapping as a first-class feature, not an afterthought.
+
+The National Education Policy 2020 mandates coding and computational thinking from Class 6 onwards, and emphasises experiential, project-based learning at all levels. Innobotix directly addresses this by making hardware project work accessible to students who have never touched an Arduino before.
+
+Every project in the Innobotix library is tagged with its CBSE alignment level (Class 6-8 Foundation, Class 9-10 Applied, Class 11-12 Advanced) and its NEP 2020 competency cluster (Computational Thinking, Design & Innovation, Data Literacy, Systems Thinking).
+
+For school administrators and teachers: Innobotix can be deployed as a school-wide platform. The Schools Dashboard (coming soon) will provide teacher oversight, student progress tracking, project submission workflows, and curriculum coverage reports aligned to your academic calendar.`
+  },
+  {
+    id: 'projects',
+    label: '05 — Projects',
+    title: 'Supported Projects & Hardware',
+    content: `CBSE COMMON TIER: Smart Irrigation System, Smart Street Light, Fire and Gas Alarm System, Home Security System, Smart Dustbin, Traffic Light Controller, Parking Assist System, Temperature Controlled Fan, RFID Door Lock, Weather Station.
+
+INTERMEDIATE TIER: Line Following Robot, Obstacle Avoiding Robot, Bluetooth Controlled Car, Gesture Controlled Robot, Maze Solver Robot.
+
+ADVANCED SHOWCASE: Autonomous Drone Navigation, Computer Vision Sorting System, Industrial IoT Dashboard, Swarm Robotics Prototype.
+
+SUPPORTED BOARDS: Arduino Uno, Arduino Nano, Arduino Mega, ESP32 (all variants), ESP8266, Raspberry Pi Pico, STM32 Nucleo series.
+
+COMPONENT COST RANGE: Most CBSE Common projects are achievable within INR 200-450 in components, sourced from standard Indian suppliers (Robu.in, Electronicscomp, local Lamington Road/SP Road vendors). The BOM generated by Innobotix includes estimated INR pricing for all components.`
+  },
+  {
+    id: 'faq',
+    label: '06 — FAQ',
+    title: 'Frequently Asked Questions',
+    content: `Q: Do I need prior programming experience?
+A: No. Innobotix generates all code automatically and the Mentor Agent explains every line. Students with zero programming background have successfully completed CBSE projects using Innobotix.
+
+Q: Does it work for ESP32 and not just Arduino?
+A: Yes. Innobotix supports Arduino Uno, Nano, Mega, all ESP32 variants, ESP8266, and Raspberry Pi Pico. Select your board in the project requirements and the Builder Agent optimises the code and pinout for that specific hardware.
+
+Q: Is the Wokwi simulation accurate enough to trust?
+A: Wokwi is used by professional electronics engineers worldwide, not just students. For the component types used in CBSE and intermediate projects, the simulation is highly accurate. Advanced projects with custom RF or industrial sensors may have simulation limitations.
+
+Q: Can my school get a bulk licence?
+A: Yes. Email avimohan@innobotix.in with your school name, student count, and board affiliation. We offer school-wide deployment packages with teacher dashboards and curriculum integration support.
+
+Q: Is Innobotix free?
+A: A free tier is available for individual students with limited monthly generations. School and institution plans are paid and include unlimited generations, teacher dashboards, and priority support.
+
+Q: Is this aligned to the CBSE Science and Technology curriculum?
+A: Yes. All projects in the CBSE Common tier map directly to the Class 8-10 science curriculum topics including electricity, sensors, and control systems.`
+  }
+];
+
+export default function DocsPage() {
+  const [active, setActive] = useState('overview');
+  const current = sections.find(s => s.id === active) || sections[0];
+
   return (
-    <div className="flex flex-1 flex-col md:flex-row bg-app-bg text-text-primary">
-      {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 border-r border-panel-border bg-[#09090b] hidden md:block">
-        <div className="p-6 sticky top-16 h-[calc(100vh-64px)] overflow-y-auto">
-          <h4 className="font-semibold text-sm mb-4 text-text-primary">Getting Started</h4>
-          <ul className="flex flex-col gap-3 text-sm text-text-secondary mb-8 pl-2 border-l border-panel-border">
-            <li><a href="#students" className="hover:text-accent-teal transition-colors -ml-[1px] border-l border-transparent hover:border-accent-teal pl-3 py-1 block">For Students</a></li>
-            <li><a href="#schools" className="hover:text-accent-teal transition-colors -ml-[1px] border-l border-transparent hover:border-accent-teal pl-3 py-1 block">For Schools</a></li>
-          </ul>
+    <main style={{background:'#0e0e0e', minHeight:'100vh',
+      color:'#fff', paddingTop:'64px', display:'flex',
+      flexDirection:'column'}}>
 
-          <h4 className="font-semibold text-sm mb-4 text-text-primary">Core Systems</h4>
-          <ul className="flex flex-col gap-3 text-sm text-text-secondary mb-8 pl-2 border-l border-panel-border">
-            <li><a href="#simulation" className="hover:text-accent-teal transition-colors -ml-[1px] border-l border-transparent hover:border-accent-teal pl-3 py-1 block">Simulation (Wokwi)</a></li>
-            <li><a href="#safety" className="hover:text-accent-teal transition-colors -ml-[1px] border-l border-transparent hover:border-accent-teal pl-3 py-1 block">Safety & Best Practices</a></li>
-          </ul>
+      {/* Header */}
+      <div style={{
+        borderBottom:'1px solid rgba(170,255,220,0.06)',
+        padding:'40px 40px 32px',
+        backgroundImage:'linear-gradient(rgba(170,255,220,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(170,255,220,0.03) 1px,transparent 1px)',
+        backgroundSize:'40px 40px'
+      }}>
+        <p style={{fontFamily:'JetBrains Mono,monospace',
+          fontSize:'10px', color:'#aaffdc',
+          letterSpacing:'0.4em', textTransform:'uppercase',
+          marginBottom:'8px'}}>[ DOCUMENTATION ]</p>
+        <h1 style={{fontFamily:'Space Grotesk,sans-serif',
+          fontSize:'32px', fontWeight:900, textTransform:'uppercase'}}>
+          Innobotix Docs
+        </h1>
+      </div>
 
-          <h4 className="font-semibold text-sm mb-4 text-text-primary">Developer</h4>
-          <ul className="flex flex-col gap-3 text-sm text-text-secondary pl-2 border-l border-panel-border">
-            <li><a href="#api" className="hover:text-accent-teal transition-colors -ml-[1px] border-l border-transparent hover:border-accent-teal pl-3 py-1 block">API & Integrations</a></li>
-            <li><a href="#" className="hover:text-accent-teal transition-colors -ml-[1px] border-l border-transparent hover:border-accent-teal pl-3 py-1 block">OpenRouter integration</a></li>
-          </ul>
-        </div>
-      </aside>
+      {/* Body */}
+      <div style={{display:'flex', flex:1}}>
 
-      {/* Main Content */}
-      <main className="flex-1 p-6 md:p-12 xl:p-16 max-w-4xl">
-        <div className="space-y-12">
-          
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold tracking-tight">Innobotix Documentation</h1>
-            <p className="text-lg text-text-secondary leading-relaxed">
-              Welcome to the official documentation for Innobotix AI Robotics Studio. Learn how to transform project definitions into safe, verified electronics builds and automated logic.
-            </p>
+        {/* Sidebar */}
+        <div style={{width:'260px', flexShrink:0,
+          background:'#131313',
+          borderRight:'1px solid rgba(170,255,220,0.06)',
+          padding:'24px 0', position:'sticky',
+          top:'64px', height:'calc(100vh - 64px)',
+          overflowY:'auto'}}>
+          {sections.map(s => (
+            <button key={s.id} onClick={() => setActive(s.id)}
+              style={{
+                display:'block', width:'100%', textAlign:'left',
+                padding:'12px 24px', background:'none', border:'none',
+                borderLeft: active === s.id
+                  ? '2px solid #00fdc1' : '2px solid transparent',
+                color: active === s.id ? '#aaffdc' : '#777575',
+                fontFamily:'JetBrains Mono,monospace', fontSize:'11px',
+                textTransform:'uppercase', letterSpacing:'0.1em',
+                cursor:'pointer', transition:'all 0.15s'
+              }}>
+              {s.label}
+            </button>
+          ))}
+          <div style={{margin:'24px', marginTop:'40px',
+            borderTop:'1px solid rgba(170,255,220,0.06)',
+            paddingTop:'24px'}}>
+            <a href="mailto:avimohan@innobotix.in"
+              style={{
+                display:'block', background:'#00fdc1',
+                color:'#004734', fontFamily:'Space Grotesk,sans-serif',
+                fontWeight:700, fontSize:'11px',
+                textTransform:'uppercase', letterSpacing:'0.1em',
+                padding:'10px 16px', textDecoration:'none',
+                textAlign:'center'
+              }}>
+              Get Support ↗
+            </a>
           </div>
-
-          <hr className="border-panel-border" />
-
-          {/* Section: Students */}
-          <section id="students" className="space-y-4 scroll-mt-24">
-            <h2 className="text-2xl font-bold text-text-primary">Getting Started – For Students</h2>
-            <p className="text-text-secondary leading-relaxed text-sm">
-              Innobotix is designed to help you quickly move past "blank page syndrome" and focus on building. Instead of guessing component requirements or scrolling through scattered tutorials, simply head over to the <Link href="/studio" className="text-accent-teal hover:underline">Studio</Link> and express your idea in plain English.
-            </p>
-            <div className="bg-panel-bg border border-panel-border rounded-lg p-5 mt-4">
-              <h4 className="font-medium text-sm mb-2 text-text-primary">Quick Example Prompt</h4>
-              <p className="italic text-text-secondary text-sm bg-app-bg p-3 rounded border border-panel-border">
-                "I want an automatic door lock system using RFID and a servo motor."
-              </p>
-            </div>
-          </section>
-
-          {/* Section: Schools */}
-          <section id="schools" className="space-y-4 scroll-mt-24">
-            <h2 className="text-2xl font-bold text-text-primary">Getting Started – For Schools</h2>
-            <p className="text-text-secondary leading-relaxed text-sm">
-              We align with the NEP 2020 framework to enforce problem-solving logic before heavy hardware usage. Using the <Link href="/school" className="text-accent-teal hover:underline">Dashboard</Link>, educators can monitor class engagement, track deployed simulations, and approve concepts before bulk ordering the Bill of Materials (BOM).
-            </p>
-            <ul className="list-disc ml-5 mt-2 space-y-2 text-sm text-text-secondary">
-              <li>Manage students via custom bulk invites.</li>
-              <li>Track aggregate simulation scores.</li>
-              <li>Review generated Arduino/ESP32 code outputs.</li>
-            </ul>
-          </section>
-
-          {/* Section: API */}
-          <section id="api" className="space-y-4 scroll-mt-24">
-            <h2 className="text-2xl font-bold text-text-primary">API & Integrations</h2>
-            <p className="text-text-secondary leading-relaxed text-sm">
-              The internal AI agent infrastructure relies on highly-tuned models generating standardized data for Wokwi and component APIs. 
-            </p>
-            <div className="bg-[#0d0d0f] border border-panel-border rounded-lg p-4 font-mono text-sm overflow-x-auto text-[#e4e4e7]">
-              <span className="text-purple-400">POST</span> <span className="text-green-400">/api/generate-plan</span>{"\n"}
-              {"{\n"}
-              {"  "}<span className="text-blue-300">"prompt"</span>: <span className="text-yellow-200">"Build a weather station"</span>,{"\n"}
-              {"  "}<span className="text-blue-300">"board"</span>: <span className="text-yellow-200">"ESP32"</span>{"\n"}
-              {"}\n"}
-            </div>
-          </section>
-
-          {/* Section: Safety */}
-          <section id="safety" className="space-y-4 scroll-mt-24">
-            <h2 className="text-2xl font-bold text-text-primary">Safety & Best Practices</h2>
-            <p className="text-text-secondary leading-relaxed text-sm">
-              While we generate simulated hardware schematics, always follow the AI-generated Safety Validation checklist provided in the Studio panels. Common mistakes like skipping motor drivers or miswiring 12V supplies are usually flagged before simulation execution.
-            </p>
-            <div className="bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 rounded-lg p-4 text-sm flex gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-              <span>Verify your component current draw. Do not power external motors directly through your microcontroller's 5V pin.</span>
-            </div>
-          </section>
-
         </div>
-      </main>
-    </div>
+
+        {/* Content */}
+        <div style={{flex:1, padding:'48px 64px', maxWidth:'800px'}}>
+          <h2 style={{fontFamily:'Space Grotesk,sans-serif',
+            fontSize:'28px', fontWeight:900,
+            textTransform:'uppercase', marginBottom:'32px',
+            borderBottom:'1px solid rgba(170,255,220,0.08)',
+            paddingBottom:'16px', color:'#00fdc1'}}>
+            {current.title}
+          </h2>
+          {current.content.split('\n\n').map((para, i) => (
+            <p key={i} style={{
+              color: para.startsWith('Q:') ? '#aaffdc'
+                   : para.startsWith('A:') ? '#adaaaa'
+                   : para.toUpperCase() === para && para.length < 60
+                   ? '#00fdc1' : '#adaaaa',
+              fontFamily: para.toUpperCase() === para && para.length < 60
+                ? 'Space Grotesk, sans-serif' : 'Inter, sans-serif',
+              fontWeight: para.toUpperCase() === para && para.length < 60
+                ? 700 : 400,
+              fontSize: para.toUpperCase() === para && para.length < 60
+                ? '13px' : '15px',
+              lineHeight: 1.9,
+              marginBottom:'20px',
+              textTransform: para.toUpperCase() === para && para.length < 60
+                ? 'uppercase' : 'none'
+            }}>
+              {para}
+            </p>
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }

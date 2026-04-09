@@ -1,7 +1,10 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from "next/link";
 
 const trustItems = [
-  "CBSE Aligned",
+  "INDIAN CURRICULUM",
   "NEP 2020",
   "Arduino & ESP32",
   "Wokwi Simulator",
@@ -103,9 +106,33 @@ const schoolBenefits = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    const hero = document.querySelector('.hero-section');
+    const panel = document.getElementById('tilt-panel');
+    if (!hero || !panel) return;
+    const onMove = (e: any) => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      panel.style.transform = `perspective(1000px) rotateY(${-30 + x * 40}deg) rotateX(${20 - y * 30}deg)`;
+    };
+    const onLeave = () => {
+      panel.style.transform = 'perspective(1000px) rotateY(-22deg) rotateX(12deg)';
+    };
+    hero.addEventListener('mousemove', onMove);
+    hero.addEventListener('mouseleave', onLeave);
+    return () => {
+      hero.removeEventListener('mousemove', onMove);
+      hero.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
   return (
     <div className="landing-page">
-      <section className="landing-hero">
+      <section className="landing-hero hero-section" style={{
+        backgroundImage: 'linear-gradient(rgba(170,255,220,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(170,255,220,0.03) 1px, transparent 1px)',
+        backgroundSize: '40px 40px'
+      }}>
         <div className="landing-shell">
           <div className="landing-hero-grid">
             <div className="landing-hero-copy">
@@ -115,7 +142,7 @@ export default function Home() {
               </h1>
               <p className="landing-hero-text">
                 Describe your project. Innobotix agents generate complete BOM, validated wiring, Arduino
-                code, and Wokwi simulation - aligned to CBSE curriculum.
+                code, and Wokwi simulation - aligned to NEP 2020.
               </p>
               <div className="landing-hero-actions">
                 <Link href="/studio" className="landing-button landing-button-primary">
@@ -127,25 +154,157 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="landing-console-wrap" aria-hidden="true">
-              <div className="landing-console-glow" />
-              <div className="landing-console">
-                <div className="landing-console-panel landing-console-main">
-                  <div className="landing-console-label">PROJECT INPUT</div>
-                  <div className="landing-console-line w-88" />
-                  <div className="landing-console-line w-62" />
-                  <div className="landing-console-line w-72" />
-                  <div className="landing-console-line w-46" />
-                  <div className="landing-console-subpanel">
-                    <div className="landing-console-subtitle">ACTIVE OUTPUT</div>
-                    <div className="landing-console-chip">Builder Agent</div>
-                    <div className="landing-console-chip">Arduino Code</div>
+            <div className="relative flex items-center justify-center">
+              <div
+                id="tilt-panel"
+                className="relative w-full"
+                style={{
+                  height: '600px',
+                  transform: 'perspective(1000px) rotateY(-15deg) rotateX(5deg)',
+                  transition: 'transform 0.08s ease'
+                }}
+              >
+                {/* Main Code Panel */}
+                <div style={{
+                  position:'absolute', inset:0,
+                  background:'#1a1919',
+                  border:'1px solid rgba(73,72,71,0.3)',
+                  padding:'4px',
+                  boxShadow:'0 0 40px -10px rgba(0,253,193,0.15)'
+                }}>
+                  {/* Panel Title Bar */}
+                  <div style={{
+                    background:'#201f1f', height:'32px',
+                    display:'flex', alignItems:'center',
+                    padding:'0 16px', justifyContent:'space-between',
+                    borderBottom:'1px solid rgba(73,72,71,0.2)'
+                  }}>
+                    <div style={{display:'flex', gap:'6px'}}>
+                      <div style={{width:'8px',height:'8px',background:'#ff716c'}}/>
+                      <div style={{width:'8px',height:'8px',background:'#9cfbfa'}}/>
+                      <div style={{width:'8px',height:'8px',background:'#aaffdc'}}/>
+                    </div>
+                    <span style={{
+                      fontFamily:'JetBrains Mono, monospace', fontSize:'10px',
+                      color:'#adaaaa', textTransform:'uppercase'
+                    }}>main_controller.ino</span>
+                  </div>
+                  {/* Code Content */}
+                  <div style={{padding:'24px', fontFamily:'JetBrains Mono, monospace', fontSize:'13px', lineHeight:'1.8'}}>
+                    <div><span style={{color:'#00edb4'}}>#include</span> <span style={{color:'#7fdede'}}>&lt;Wire.h&gt;</span></div>
+                    <div><span style={{color:'#00edb4'}}>#include</span> <span style={{color:'#7fdede'}}>&lt;Adafruit_Sensor.h&gt;</span></div>
+                    <div><span style={{color:'#00edb4'}}>#include</span> <span style={{color:'#7fdede'}}>&lt;Adafruit_BNO055.h&gt;</span></div>
+                    <div><span style={{color:'#00edb4'}}>#include</span> <span style={{color:'#7fdede'}}>&lt;utility/imumaths.h&gt;</span></div>
+                    <div style={{color:'#fff', marginTop:'8px'}}><span style={{color:'#00edb4'}}>Adafruit_BNO055</span> bno = Adafruit_BNO055(55, 0x28, &amp;Wire);</div>
+                    
+                    <div style={{color:'#555', marginTop:'12px'}}>{'// Initialize IMU system and prepare I2C clock'}</div>
+                    <div style={{color:'#fff', marginTop:'4px'}}><span style={{color:'#00edb4'}}>void</span> setup() {'{'}</div>
+                    <div style={{color:'#fff', paddingLeft:'20px'}}>Serial.begin(<span style={{color:'#59fac3'}}>115200</span>);</div>
+                    <div style={{color:'#fff', paddingLeft:'20px'}}><span style={{color:'#00edb4'}}>while</span>(!Serial) delay(10); <span style={{color:'#555'}}>// wait for port</span></div>
+                    <div style={{color:'#fff', paddingLeft:'20px'}}>Serial.begin(<span style={{color:'#59fac3'}}>115200</span>);</div>
+                    <div style={{color:'#fff', paddingLeft:'20px'}}><span style={{color:'#00edb4'}}>if</span>(!bno.begin()) {'{'}</div>
+                    <div style={{color:'#d7383b', paddingLeft:'40px'}}>Serial.print(<span style={{color:'#59fac3'}}>"ERR: NO_BNO055"</span>);</div>
+                    <div style={{color:'#fff', paddingLeft:'20px'}}>{'}'}</div>
+                    <div style={{color:'#fff'}}>{'}'}</div>
                   </div>
                 </div>
-                <div className="landing-console-panel landing-console-float">
-                  <div className="landing-console-label">STATUS</div>
-                  <div className="landing-console-line w-70" />
-                  <div className="landing-console-line w-54" />
+
+                {/* Floating COMPONENT_BOM panel — top right */}
+                <div style={{
+                  position:'absolute', top:'48px', right:'-48px',
+                  width:'200px', background:'#262626',
+                  border:'1px solid rgba(0,253,193,0.4)',
+                  padding:'16px', zIndex:10,
+                  display:'none'
+                }} className="lg:block">
+                  <div style={{
+                    fontFamily:'JetBrains Mono, monospace', fontSize:'10px',
+                    color:'#00fdc1', letterSpacing:'0.15em',
+                    textTransform:'uppercase', marginBottom:'12px'
+                  }}>[ COMPONENT_BOM ]</div>
+                  {[
+                    {name:'Arduino Nano R3', qty:'x1'},
+                    {name:'L298N Motor Driver', qty:'x2'},
+                    {name:'HC-SR04 Sensor', qty:'x4'},
+                  ].map((item, i) => (
+                    <div key={i} style={{
+                      display:'flex', justifyContent:'space-between',
+                      borderBottom:'1px solid rgba(73,72,71,0.2)',
+                      paddingBottom:'8px', marginBottom:'8px'
+                    }}>
+                      <span style={{fontFamily:'JetBrains Mono, monospace', fontSize:'12px', color:'#fff'}}>{item.name}</span>
+                      <span style={{fontFamily:'JetBrains Mono, monospace', fontSize:'10px', color:'#aaffdc'}}>{item.qty}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Floating BUILDER_AGENT_LOG — bottom left */}
+                <div style={{
+                  position:'absolute', bottom:'64px', left:'-64px',
+                  width:'280px', background:'#131313',
+                  border:'1px solid rgba(73,72,71,0.3)',
+                  padding:'16px', zIndex:10,
+                  display:'none'
+                }} className="lg:block">
+                  <div style={{display:'flex', alignItems:'center', gap:'8px', marginBottom:'12px'}}>
+                    <span style={{fontFamily:'JetBrains Mono, monospace', fontSize:'10px', color:'#adaaaa', textTransform:'uppercase', letterSpacing:'0.15em'}}>BUILDER_AGENT_LOG</span>
+                  </div>
+                  <div style={{fontFamily:'JetBrains Mono, monospace', fontSize:'11px', lineHeight:'1.8'}}>
+                    <div style={{color:'#555'}}>&gt;&gt; Analyzing schematic requirements...</div>
+                    <div style={{color:'#00edb4'}}>&gt;&gt; Optimized I2C bus detected.</div>
+                    <div style={{color:'#fff'}}>&gt;&gt; Code validation: 98.4% success.</div>
+                    <div style={{color:'#59fac3'}}>&gt;&gt; READY_FOR_SIMULATION</div>
+                  </div>
+                </div>
+
+                {/* Innobotix Multi Agents badge — bottom left */}
+                <div style={{
+                  position:'absolute', bottom:'24px', left:'32px',
+                  background:'#0e0e0e', padding:'8px 16px',
+                  border:'1px solid #aaffdc',
+                  display:'flex', alignItems:'center', gap:'12px', zIndex:10
+                }}>
+                  <div style={{position:'relative', width:'16px', height:'16px'}}>
+                    <div style={{
+                      position:'absolute', inset:0, background:'#00fdc1',
+                      borderRadius:'50%', animation:'ping 1s infinite'
+                    }}/>
+                    <div style={{
+                      position:'relative', width:'16px', height:'16px', background:'#00fdc1'
+                    }}/>
+                  </div>
+                  <span style={{
+                    fontFamily:'JetBrains Mono, monospace', fontSize:'12px',
+                    textTransform:'uppercase', letterSpacing:'0.05em', color:'#fff'
+                  }}>Innobotix Multi Agents</span>
+                </div>
+
+                {/* CSS Wireframe Cube */}
+                <div style={{
+                  position:'absolute', bottom:'20px', right:'20px',
+                  width:'80px', height:'80px', perspective:'200px',
+                  pointerEvents:'none', zIndex:0
+                }}>
+                  <div style={{
+                    width:'80px', height:'80px', position:'relative',
+                    transformStyle:'preserve-3d',
+                    animation:'rotateCube 10s linear infinite'
+                  }}>
+                    {[
+                      {transform:'rotateY(0deg) translateZ(40px)'},
+                      {transform:'rotateY(90deg) translateZ(40px)'},
+                      {transform:'rotateY(180deg) translateZ(40px)'},
+                      {transform:'rotateY(-90deg) translateZ(40px)'},
+                      {transform:'rotateX(90deg) translateZ(40px)'},
+                      {transform:'rotateX(-90deg) translateZ(40px)'},
+                    ].map((f, i) => (
+                      <div key={i} style={{
+                        position:'absolute', width:'80px', height:'80px',
+                        border:'1px solid rgba(0,253,193,0.2)',
+                        background:'transparent', ...f
+                      }}/>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -153,16 +312,47 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="landing-trust-strip" aria-label="Trust indicators">
-        <div className="landing-trust-track">
-          {[...trustItems, ...trustItems].map((item, index) => (
-            <span key={`${item}-${index}`} className="landing-trust-item">
-              <span className="landing-trust-dot" />
-              {item}
-            </span>
-          ))}
+      <div style={{
+        width:'100%', height:'44px', background:'#131313',
+        borderTop:'1px solid rgba(170,255,220,0.08)',
+        borderBottom:'1px solid rgba(170,255,220,0.08)',
+        display:'flex', alignItems:'center', overflow:'hidden',
+        position:'relative'
+      }}>
+        <div style={{
+          flexShrink:0, padding:'0 32px',
+          fontFamily:'JetBrains Mono, monospace', fontSize:'10px',
+          color:'#777575', textTransform:'uppercase', letterSpacing:'0.15em',
+          whiteSpace:'nowrap', zIndex:2, background:'#131313',
+          borderRight:'1px solid rgba(170,255,220,0.08)'
+        }}>
+          FEATURED IN:
         </div>
-      </section>
+        <div style={{overflow:'hidden', flex:1}}>
+          <div style={{
+            display:'flex', alignItems:'center',
+            animation:'marquee 35s linear infinite',
+            whiteSpace:'nowrap', width:'max-content'
+          }}>
+            {[
+              'Doordarshan','The Better India','Startup Jharkhand',
+              'NEP 2020','Arduino','ESP32','CBSE Tech',
+              'Doordarshan','The Better India','Startup Jharkhand',
+              'NEP 2020','Arduino','ESP32','CBSE Tech'
+            ].map((item, i) => (
+              <span key={i} style={{
+                fontFamily:'JetBrains Mono, monospace',
+                fontSize:'11px', color:'#aaffdc',
+                textTransform:'uppercase', letterSpacing:'0.15em',
+                marginRight:'0'
+              }}>
+                {item}
+                <span style={{color:'#00fdc1', margin:'0 14px', fontSize:'8px'}}>✦</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <section className="landing-section landing-shell" id="agents">
         <div className="landing-section-title">
@@ -228,7 +418,7 @@ export default function Home() {
                       {"\n"}const int relayPin = 8;
                       {"\n"}
                       {"\n"}void setup() {"\n"}  pinMode(relayPin, OUTPUT);
-                      {"\n"}}{"\n"}
+                      {"\n"}{"}"}{"\n"}
                     </code>
                   </pre>
                 ) : null}
@@ -308,7 +498,7 @@ export default function Home() {
           <p>
             AI robotics workflows for students and schools with full project outputs from one prompt.
           </p>
-          <div className="landing-hero-actions">
+          <div className="landing-hero-actions" style={{ justifyContent: 'center', width: '100%' }}>
             <Link href="/studio" className="landing-button landing-button-primary">
               Launch Studio
             </Link>
@@ -318,6 +508,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+
     </div>
   );
 }

@@ -43,7 +43,35 @@
     background: rgba(45, 212, 191, 0.3);
     color: #fff;
   }
+  /* Add custom scrollbar hiding for webkit but general usage */
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes rotateCube {
+  from { transform: rotateY(0deg) rotateX(10deg); }
+  to { transform: rotateY(360deg) rotateX(10deg); }
+}
+
+@keyframes ping {
+  0% { transform: scale(1); opacity: 1; }
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+.perspective-tilt {
+  transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+  transition: transform 0.08s ease;
+}
+
+textarea::placeholder { color: rgba(255,255,255,0.45); }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 @layer components {
   .landing-page {
@@ -71,7 +99,7 @@
     padding: 8px 12px;
     font-family: "JetBrains Mono", monospace;
     font-size: 10px;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
     color: #aaffdc;
     background: rgba(170, 255, 220, 0.03);
@@ -122,15 +150,21 @@
 
   .landing-hero-actions {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
     gap: 12px;
+    align-items: center;
+  }
+
+  .landing-final-cta .landing-hero-actions {
+    justify-content: center;
   }
 
   .landing-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
+    min-height: 48px;
+    height: 48px;
     padding: 12px 22px;
     font-family: "Space Grotesk", sans-serif;
     font-size: 11px;
@@ -247,39 +281,7 @@
     margin-top: 8px;
   }
 
-  .landing-trust-strip {
-    border-block: 1px solid rgba(73, 72, 71, 0.16);
-    background: #131313;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
-  .landing-trust-track {
-    display: inline-flex;
-    align-items: center;
-    gap: 46px;
-    min-width: max-content;
-    padding: 19px 32px;
-    animation: landing-scroll 28s linear infinite;
-  }
-
-  .landing-trust-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #a0a0a0;
-  }
-
-  .landing-trust-dot {
-    width: 5px;
-    height: 5px;
-    background: #00fdc1;
-  }
+  /* landing-trust-strip logic replaced by JSX inline component */
 
   .landing-section-title,
   .landing-project-title {
@@ -320,6 +322,12 @@
   .landing-agent-card {
     padding: 28px 26px 24px;
     border-bottom: 3px solid #00fdc1;
+    border-top: 2px solid transparent;
+    transition: all 0.2s ease;
+  }
+  .landing-agent-card:hover {
+    border-top: 2px solid #00fdc1;
+    background: linear-gradient(180deg, rgba(0,253,193,0.04) 0%, transparent 100%), #1a1919;
   }
 
   .landing-agent-card.accent-secondary { border-color: #59fac3; }
@@ -398,8 +406,9 @@
     margin: 0 0 4px;
     font-family: "JetBrains Mono", monospace;
     font-size: 10px;
-    letter-spacing: 0.18em;
-    color: #7e7e7e;
+    letter-spacing: 0.4em;
+    color: #aaffdc;
+    text-transform: uppercase;
   }
 
   .landing-output-grid {
@@ -412,6 +421,13 @@
     min-height: 170px;
     padding: 18px;
     border: 1px solid rgba(73, 72, 71, 0.16);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .landing-output-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 253, 193, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 253, 193, 0.08);
   }
 
   .landing-output-card-large {
@@ -488,6 +504,12 @@
 
   .landing-project-card {
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .landing-project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 253, 193, 0.08);
   }
 
   .landing-project-visual {
@@ -497,28 +519,27 @@
   }
 
   .landing-project-visual.visual-1 {
-    background-image:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent),
-      radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.28), transparent 25%),
-      linear-gradient(0deg, #3a3a3a, #161616);
+    background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=600');
+    background-size: cover;
+    background-position: center;
   }
 
   .landing-project-visual.visual-2 {
-    background-image:
-      radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.7), transparent 22%),
-      linear-gradient(180deg, #efefef, #989898);
+    background-image: url('https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=600');
+    background-size: cover;
+    background-position: center;
   }
 
   .landing-project-visual.visual-3 {
-    background-image:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent),
-      linear-gradient(45deg, #5d5d5d, #212121);
+    background-image: url('https://images.unsplash.com/photo-1517077304055-6e897dbdb9dd?auto=format&fit=crop&q=80&w=600');
+    background-size: cover;
+    background-position: center;
   }
 
   .landing-project-visual.visual-4 {
-    background-image:
-      linear-gradient(0deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
-      linear-gradient(135deg, #9f9f9f, #3a3a3a);
+    background-image: url('https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&q=80&w=600');
+    background-size: cover;
+    background-position: center;
   }
 
   .landing-project-body {
@@ -586,14 +607,19 @@
     border: 1px solid rgba(73, 72, 71, 0.25);
     background: #0e0e0e;
     box-shadow: 0 0 52px rgba(0, 253, 193, 0.06);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .landing-school-visual:hover {
+    transform: perspective(1000px) rotateY(-2deg) rotateX(1deg) scale(1.02);
+    box-shadow: 0 0 80px rgba(0, 253, 193, 0.12);
   }
 
   .landing-school-image {
     aspect-ratio: 1 / 1;
-    background:
-      radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.5), transparent 22%),
-      linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 40%),
-      linear-gradient(180deg, #636363, #1c1c1c 54%, #111);
+    background-image: url('https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800');
+    background-size: cover;
+    background-position: center;
     filter: grayscale(1);
     opacity: 0.82;
   }
