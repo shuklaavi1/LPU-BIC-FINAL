@@ -12,32 +12,32 @@ const DEMO_MODE = true; // Set to false to use live /api/agent endpoint
 
 // ─── Agent timeline steps ─────────────────────────────────────────
 const AGENT_TIMELINE: AgentStep[] = [
-  { t: 0,  agent: 'Builder',   msg: 'Reading your project idea and selecting optimal components…' },
-  { t: 5,  agent: 'Circuit',   msg: 'Preparing pin map and safe power flow diagram…' },
-  { t: 10, agent: 'Mentor',    msg: 'Checking learning level, CBSE alignment, and common mistakes…' },
-  { t: 15, agent: 'Builder',   msg: 'Generating BOM, firmware logic, and project structure…' },
+  { t: 0, agent: 'Builder', msg: 'Reading your project idea and selecting optimal components…' },
+  { t: 5, agent: 'Circuit', msg: 'Preparing pin map and safe power flow diagram…' },
+  { t: 10, agent: 'Mentor', msg: 'Checking learning level, CBSE alignment, and common mistakes…' },
+  { t: 15, agent: 'Builder', msg: 'Generating BOM, firmware logic, and project structure…' },
   { t: 20, agent: 'Simulator', msg: 'Preparing Wokwi simulation workspace…' },
-  { t: 25, agent: 'Mentor',    msg: 'Final review complete — preparing follow-up guidance…' },
-  { t: 30, agent: 'All',       msg: 'Your project is ready.' },
+  { t: 25, agent: 'Mentor', msg: 'Final review complete — preparing follow-up guidance…' },
+  { t: 30, agent: 'All', msg: 'Your project is ready.' },
 ];
 
 
 
 // ─── Agent colour map ────────────────────────────────────────────
 const AGENT_COLORS: Record<string, string> = {
-  Builder:   'text-teal-400',
-  Circuit:   'text-purple-400',
-  Mentor:    'text-blue-400',
+  Builder: 'text-teal-400',
+  Circuit: 'text-purple-400',
+  Mentor: 'text-blue-400',
   Simulator: 'text-amber-400',
-  All:       'text-green-400',
+  All: 'text-green-400',
 };
 
 const AGENT_BG: Record<string, string> = {
-  Builder:   'bg-teal-400/10 border-teal-400/20',
-  Circuit:   'bg-purple-400/10 border-purple-400/20',
-  Mentor:    'bg-blue-400/10 border-blue-400/20',
+  Builder: 'bg-teal-400/10 border-teal-400/20',
+  Circuit: 'bg-purple-400/10 border-purple-400/20',
+  Mentor: 'bg-blue-400/10 border-blue-400/20',
   Simulator: 'bg-amber-400/10 border-amber-400/20',
-  All:       'bg-green-400/10 border-green-400/20',
+  All: 'bg-green-400/10 border-green-400/20',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -50,7 +50,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 function SeverityIcon({ s }: { s: string }) {
   if (s === 'critical') return <svg className="shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
-  if (s === 'warning')  return <svg className="shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>;
+  if (s === 'warning') return <svg className="shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>;
   return <svg className="shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>;
 }
 
@@ -86,13 +86,15 @@ function StudioContent() {
     'https://wokwi.com/projects/new/arduino-uno'
   );
   const [iframeLoading, setIframeLoading] = useState(true);
-  
-  const wokwiProjects: Record<string,string> = {
+
+  const wokwiProjects: Record<string, string> = {
     'Smart Street Light': 'https://wokwi.com/projects/new/arduino-uno',
     'Fire and Gas Alarm System': 'https://wokwi.com/projects/new/arduino-uno',
-    'Smart Irrigation System': 'https://wokwi.com/projects/new/arduino-uno',
+    'Smart Irrigation System': 'https://wokwi.com/projects/461266223714257921',
     'Traffic Light Controller': 'https://wokwi.com/projects/new/arduino-uno',
     'Weather Station': 'https://wokwi.com/projects/new/arduino-uno',
+    'Alarm Clock with RTC': 'https://wokwi.com/projects/297787059514376717',
+    'Electronic Safe': 'https://wokwi.com/projects/297787059514376717',
   };
 
   const selectedProject: Project | undefined = PROJECTS.find(p => p.id === selectedId);
@@ -175,8 +177,8 @@ function StudioContent() {
   // ── Safety severity colours ──────────────────────────────────
   const sevColor: Record<string, string> = {
     critical: 'bg-red-500/10 border-red-500/20 text-red-400',
-    warning:  'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
-    info:     'bg-blue-500/10 border-blue-500/20 text-blue-400',
+    warning: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
+    info: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
   };
 
   return (
@@ -272,13 +274,13 @@ function StudioContent() {
                 </ul>
               </div>
             )}
-            
+
             {/* Prompt area */}
             <div className="mt-auto shrink-0 flex flex-col gap-3">
               <p style={{
-                fontFamily:'JetBrains Mono, monospace', fontSize:'10px',
-                color:'#aaffdc', letterSpacing:'0.3em',
-                textTransform:'uppercase', marginBottom:'8px'
+                fontFamily: 'JetBrains Mono, monospace', fontSize: '10px',
+                color: '#aaffdc', letterSpacing: '0.3em',
+                textTransform: 'uppercase', marginBottom: '8px'
               }}>
                 [ DESCRIBE YOUR PROJECT ]
               </p>
@@ -292,11 +294,11 @@ function StudioContent() {
                 }}
                 placeholder="Describe your robotics project... e.g. line-following robot with Arduino Uno"
                 style={{
-                  width:'100%', minHeight:'120px', padding:'14px',
-                  background:'#131313', color:'#ffffff', resize:'none',
-                  border:'1px solid rgba(170,255,220,0.25)', borderRadius:'0px',
-                  fontFamily:'JetBrains Mono, monospace', fontSize:'13px',
-                  outline:'none', boxSizing:'border-box'
+                  width: '100%', minHeight: '120px', padding: '14px',
+                  background: '#131313', color: '#ffffff', resize: 'none',
+                  border: '1px solid rgba(170,255,220,0.25)', borderRadius: '0px',
+                  fontFamily: 'JetBrains Mono, monospace', fontSize: '13px',
+                  outline: 'none', boxSizing: 'border-box'
                 }}
                 onFocus={(e) => {
                   e.target.style.borderColor = '#00fdc1';
@@ -307,24 +309,26 @@ function StudioContent() {
                   e.target.style.boxShadow = 'none';
                 }}
               />
-              <div style={{display:'flex', justifyContent:'space-between', 
-                alignItems:'center', marginTop:'8px'}}>
+              <div style={{
+                display: 'flex', justifyContent: 'space-between',
+                alignItems: 'center', marginTop: '8px'
+              }}>
                 <span id="char-counter" style={{
-                  fontFamily:'JetBrains Mono, monospace',
-                  fontSize:'10px', color:'#777575'
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '10px', color: '#777575'
                 }}>{prompt.length} / 500</span>
                 <button
                   onClick={handleGenerate}
                   disabled={isGenerating}
                   style={{
-                    background:'#00fdc1', color:'#004734', fontWeight:'700',
-                    fontSize:'11px', letterSpacing:'0.15em', textTransform:'uppercase',
-                    padding:'10px 20px', border:'none', borderRadius:'0px', cursor:'pointer',
+                    background: '#00fdc1', color: '#004734', fontWeight: '700',
+                    fontSize: '11px', letterSpacing: '0.15em', textTransform: 'uppercase',
+                    padding: '10px 20px', border: 'none', borderRadius: '0px', cursor: 'pointer',
                     opacity: isGenerating ? 0.5 : 1
                   }}
                   onMouseEnter={(e) => {
                     if (!isGenerating) {
-                      (e.target as HTMLButtonElement).style.boxShadow = 
+                      (e.target as HTMLButtonElement).style.boxShadow =
                         '0 0 15px rgba(0,237,180,0.35)';
                     }
                   }}
@@ -680,7 +684,7 @@ function StudioContent() {
                     </div>
                     <div className="mt-4 relative">
                       <input type="text" placeholder="Or type your own modification..." value="" readOnly
-                        onClick={() => {}} className="w-full bg-[#09090b] border border-panel-border text-text-secondary rounded-xl py-3 pl-4 pr-32 text-sm focus:outline-none focus:border-blue-500/40 cursor-pointer" />
+                        onClick={() => { }} className="w-full bg-[#09090b] border border-panel-border text-text-secondary rounded-xl py-3 pl-4 pr-32 text-sm focus:outline-none focus:border-blue-500/40 cursor-pointer" />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-text-secondary bg-zinc-800 px-2 py-0.5 rounded">Coming soon</span>
                     </div>
                   </div>

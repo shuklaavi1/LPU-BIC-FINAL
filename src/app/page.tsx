@@ -80,7 +80,7 @@ const projectGroups = [
   {
     label: "Advanced Showcase",
     title: "Bluetooth Controlled Car",
-    projects: ["IoT Smart Home (ESP32)", "Smart Farm Protection Device"],
+    projects: ["IoT Smart Home (ESP32)", "Smart Farm Protection Device", "Alarm Clock with RTC", "Electronic Safe"],
   },
 ];
 
@@ -133,13 +133,30 @@ export default function Home() {
         backgroundImage: 'linear-gradient(rgba(170,255,220,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(170,255,220,0.03) 1px, transparent 1px)',
         backgroundSize: '40px 40px'
       }}>
-        <div className="landing-shell">
+        {/* Status chip (Absolute top right for Desktop) */}
+        <div className="absolute top-6 right-6 hidden md:flex items-center gap-2 bg-[#161616]/40 backdrop-blur border border-[#1a1a1a] px-3 py-1.5 overflow-hidden z-20">
+          <div className="absolute inset-0 w-full h-[1px] top-0 bg-gradient-to-r from-transparent via-[#2dd4bf] to-transparent" style={{ animation: 'shimmer 7s linear infinite' }} />
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" strokeWidth="2"><path d="m11 21-4.8 1.6c-.6.2-1.2-.3-1.2-.9V18c0-.6-.4-1-1-1H3c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h1l3.5-7.5C7.8 2.2 8.3 2 8.9 2h6.2c.6 0 1.1.2 1.4.7L20 10h1c.6 0 1 .4 1 1v4c0 .6-.4 1-1 1h-1c-.6 0-1 .4-1 1v3.7c0 .6-.6 1.1-1.2.9L13 21"/></svg>
+          <span className="font-mono text-[9px] uppercase tracking-widest text-[#999999]">EMERGENT VENTURES</span>
+        </div>
+
+        <div className="landing-shell relative">
           <div className="landing-hero-grid">
             <div className="landing-hero-copy">
               <div className="landing-kicker">[ SYSTEM_VERSION_2.4 ]</div>
               <h1 className="landing-hero-title">
                 The AI <span>Robotics Studio</span> for Students.
               </h1>
+              
+              {/* Status chip (Mobile Flow) */}
+              <div className="md:hidden flex mb-6 w-max mx-auto md:mx-0">
+                <div className="relative flex items-center gap-2 bg-[#161616]/40 backdrop-blur border border-[#1a1a1a] px-3 py-1.5 overflow-hidden">
+                  <div className="absolute inset-0 w-full h-[1px] top-0 bg-gradient-to-r from-transparent via-[#2dd4bf] to-transparent" style={{ animation: 'shimmer 7s linear infinite' }} />
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" strokeWidth="2"><path d="m11 21-4.8 1.6c-.6.2-1.2-.3-1.2-.9V18c0-.6-.4-1-1-1H3c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h1l3.5-7.5C7.8 2.2 8.3 2 8.9 2h6.2c.6 0 1.1.2 1.4.7L20 10h1c.6 0 1 .4 1 1v4c0 .6-.4 1-1 1h-1c-.6 0-1 .4-1 1v3.7c0 .6-.6 1.1-1.2.9L13 21"/></svg>
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-[#999999]">EMERGENT VENTURES</span>
+                </div>
+              </div>
+
               <p className="landing-hero-text">
                 Describe your project. Innobotix agents generate complete BOM, validated wiring, Arduino
                 code, and Wokwi simulation - aligned to NEP 2020.
@@ -445,6 +462,62 @@ export default function Home() {
               </div>
             </article>
           ))}
+          
+          {/* Card 1 – Alarm Clock with RTC */}
+          <article className="landing-project-card group relative hover:translate-y-[-6px] transition-transform duration-300 hover:shadow-[0_12px_30px_rgba(0,253,193,0.08)]">
+            <div className="landing-project-visual flex items-center justify-center border-b border-[#262626] relative">
+              <span className="font-mono text-[10px] text-[#777575] max-w-[200px] text-center px-4">
+                [INSERT real wokwi screenshot for Alarm Clock manually here]
+              </span>
+            </div>
+            
+            {/* Hover overlay */}
+            <div className="absolute inset-x-0 top-0 h-[154px] bg-[#0e0e0e]/95 backdrop-blur-sm p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center z-10 border-b border-[#262626]">
+              <p className="text-[12px] text-[#9f9f9f] leading-[1.6]">
+                Arduino-powered alarm clock with RTC, 7-segment display, buttons, and buzzer.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span className="bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">Advanced</span>
+                <span className="bg-zinc-800 border border-zinc-700 text-zinc-300 text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">Timekeeping</span>
+              </div>
+            </div>
+
+            <div className="landing-project-body relative z-0 bg-[#1a1919]">
+              <div className="landing-project-label">Advanced Showcase</div>
+              <h2 className="font-space-grotesk text-[14px] uppercase font-bold tracking-[-0.04em] mt-2 mb-1">Alarm Clock with RTC</h2>
+              <p className="text-[11px] text-[#777] font-inter leading-[1.7]">
+                Set alarms, see real time, hear the buzzer.
+              </p>
+            </div>
+          </article>
+
+          {/* Card 2 – Electronic Safe */}
+          <article className="landing-project-card group relative hover:translate-y-[-6px] transition-transform duration-300 hover:shadow-[0_12px_30px_rgba(0,253,193,0.08)]">
+            <div className="landing-project-visual flex items-center justify-center border-b border-[#262626] relative">
+              <span className="font-mono text-[10px] text-[#777575] max-w-[200px] text-center px-4">
+                [INSERT real wokwi screenshot for Electronic Safe manually here]
+              </span>
+            </div>
+            
+            {/* Hover overlay */}
+            <div className="absolute inset-x-0 top-0 h-[154px] bg-[#0e0e0e]/95 backdrop-blur-sm p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center z-10 border-b border-[#262626]">
+              <p className="text-[12px] text-[#9f9f9f] leading-[1.6]">
+                Enter a PIN on the keypad to unlock a servo-driven safe; wrong code triggers a buzzer.
+              </p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span className="bg-teal-500/10 border border-teal-500/20 text-teal-400 text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">Advanced</span>
+                <span className="bg-zinc-800 border border-zinc-700 text-zinc-300 text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">Security</span>
+              </div>
+            </div>
+
+            <div className="landing-project-body relative z-0 bg-[#1a1919]">
+              <div className="landing-project-label">Advanced Showcase</div>
+              <h2 className="font-space-grotesk text-[14px] uppercase font-bold tracking-[-0.04em] mt-2 mb-1">Electronic Safe</h2>
+              <p className="text-[11px] text-[#777] font-inter leading-[1.7]">
+                Keypad + LCD + servo-lock demo.
+              </p>
+            </div>
+          </article>
         </div>
       </section>
 
